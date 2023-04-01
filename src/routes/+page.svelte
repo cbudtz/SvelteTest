@@ -1,22 +1,39 @@
 <script>
-    import {Button} from "sveltestrap";
+    import {Button, Input, Row} from "sveltestrap";
+    let vejnavn =""
+    let husnr =""
 
     let fetchData = async ()=>{
-        const res = await fetch("https://api.dataforsyningen.dk/adresser?vejnavn=Rødkildevej&husnr=46&struktur=mini");
-        const data = await res.json();
-        const text = JSON.stringify(data)
-        return text;
+        await new Promise(r => setTimeout(r, 1000)); //Some delay for testing - just remove
+        const res = await fetch("https://api.dataforsyningen.dk/adresser?vejnavn=" + vejnavn +"&husnr="+ husnr +"&struktur=mini");
+        return await res.json();
     };
-
-
+    let promise = [];
 </script>
-
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-
-<Button on:click={fetchData}>Test</Button>
-{#await fetchData}
-    {:then}
-
+<!-- Some sveltestrap rows to align stuff: -->
+<Row>
+    <!-- Input bound to variables -->
+<Input type="text" bind:value={vejnavn} placeholder="Search for vejnavn"/>
+</Row>
+<Row>
+<Input type="text" bind:value={husnr} placeholder="Search for nr"/>
+</Row>
+<Row>
+    <!-- Button that starts async fetching -->
+<Button on:click={()=>promise=fetchData()}>Test</Button>
+</Row>
+<!-- Svelte syntax to show Loading until async promise is resolved -->
+{#await promise}
+    Loading...
+{:then json}
+    <div>
+        Got Adresses:
+    </div>
+    <!-- Svelte templating to map address array to multiple lines -->
+    {#each json as address }
+    <ol>
+        {address.betegnelse}
+    </ol>
+    {/each}
 {/await}
 
