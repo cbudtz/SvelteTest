@@ -1,5 +1,5 @@
 <script>
-    import {Button, Input, Row} from "sveltestrap";
+    import {Button, Container, Input, Row} from "sveltestrap";
     let vejnavn =""
     let husnr =""
 
@@ -11,6 +11,7 @@
     let promise = [];
 </script>
 <!-- Some sveltestrap rows to align stuff: -->
+<Container>
 <Row>
     <!-- Input bound to variables -->
 <Input type="text" bind:value={vejnavn} placeholder="Search for vejnavn"/>
@@ -22,6 +23,7 @@
     <!-- Button that starts async fetching -->
 <Button on:click={()=>promise=fetchData()}>Test</Button>
 </Row>
+</Container>
 <!-- Svelte syntax to show Loading until async promise is resolved -->
 {#await promise}
     Loading...
